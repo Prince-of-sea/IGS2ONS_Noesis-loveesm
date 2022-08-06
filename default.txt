@@ -1,0 +1,360 @@
+;mode800
+*define
+
+caption "ラブesエム for ONScripter"
+
+rmenu "セーブ",save,"ロード",load,"ログ",lookback,"リセット",reset
+savename "ＳＡＶＥ","ＬＯＡＤ","ＤＡＴＡ"
+savenumber 18
+transmode alpha
+globalon
+rubyon
+saveon
+nsa
+humanz 10
+windowback
+
+effect 10,10,500
+effect 11,10,200
+
+pretextgosub *pretext_lb
+defsub errmsg
+defsub SeVoiceLoading
+defsub tati_set
+defsub tati_load
+defsub tati_reset
+defsub def_SEset
+defsub spmsg
+defsub spmsg_end
+defsub ADV_setting
+game
+;----------------------------------------
+*errmsg
+	csp -1:print 1
+	bg black,1
+	
+	Ｃｏｎｖｅｒｔ　Ｅｒｒｏｒ！@
+	このメッセージが見れるのはおかしいよ@
+	クリックでタイトルに戻ります…\
+return
+
+
+*SeVoiceLoading
+	;se/voice周り
+	if $11=="" return
+	
+	fileexist %0,"voice\"+$11+".ogg"
+	
+	if %0==1 dwave 0,"voice\"+$11+".ogg"
+	if %0!=1 dwave 1,"se\"+$11+".ogg"
+	
+	mov $11,""
+return
+
+
+*pretext_lb
+	dwavestop -1
+	
+	;キャラ名中央表示用座標取得
+	;詳細はミクキスコンバータ参照
+	len %1,$10
+	mov %2,(185-(%1/2)*(26+2)-2)/2
+	
+	lsp 8,":s;#000000"+$10,%2,425
+	vsp 9,1
+	print 1
+	mov $10,""
+	
+	SeVoiceLoading
+	saveon ;pretextgosub時終わりのsaveonは必須!!!!!!!!
+return
+
+
+*tati_set
+	getparam $1,$2
+	;if $18==$19 mov $17,"":mov $19,""
+	
+	if $16=="" mov $16,$1:mov $18,$2:goto *set_end
+	if $18==$2 mov $16,$1:goto *set_end
+	
+	if $17=="" mov $17,$1:mov $19,$2:goto *set_end
+	if $19==$2 mov $17,$1:goto *set_end
+	*set_end
+return
+
+
+*tati_load
+	vsp 9,0:vsp 8,0
+	if $16!="" lsph 16 "image\"+$16,0,0:getspsize 16,%1,%2
+	if $17!="" lsph 17 "image\"+$17,0,0:getspsize 17,%3,%4
+	
+	if $16!="" if $17=="" amsp 16,400-(%1/2),0:vsp 16,1
+	if $16!="" if $17!="" amsp 16,250-(%1/2),0:amsp 17,550-(%3/2),0:vsp 16,1:vsp 17,1
+	
+	print 11
+return
+
+*tati_reset
+	mov $16,"":mov $17,"":mov $18,"":mov $19,""
+	csp 16:csp 17
+return
+
+
+*def_SEset
+	getparam $0
+	fileexist %0,"bgm\"+$0+".ogg"
+	
+	if %0==1 bgm "bgm\"+$0+".ogg"
+	if %0!=1 mov $11,$0
+return
+
+
+*spmsg
+	getparam $0
+	bg black,1
+	lsp 7 "image\"+$0+".png",0,0
+	print 10
+return
+
+*spmsg_end
+	SeVoiceLoading
+	click
+	csp 7
+	print 10
+return
+
+
+*ADV_setting
+	csp -1:dwavestop -1:bgmstop
+	setwindow 150,460,22,4,24,24,1,5,20,0,1,"image\window_base.png",0,441
+	abssetcursor 1,":a/8,100,2;image\click_wait.png",735,535
+	lsph 9 "image\window_name.png",0,400
+return
+;----------------------------------------
+;[memo]
+;数字変数
+;	%0~%9 getparam汎用
+;	%100~109 途中選択肢用
+;	%200 姉クリア
+;	%201 恋人クリア
+;	%202 全部クリア
+;文字変数
+;	$0~$9 getparam汎用
+;	$10 キャラ名前
+;	$11 se/voice
+;	$16 立ち絵右
+;	$17 立ち絵左
+;	$18 立ち絵右name
+;	$19 立ち絵左name
+;	$60 途中選択肢用
+;スプライト
+;	8 名前
+;	9 名前欄
+;	16 立ち絵右
+;	17 立ち絵左
+;----------------------------------------
+*start
+bg black,1
+
+
+bg "image\logo_n.png",10
+
+;ブランドコール
+rnd %6,3	;0~2
+if %6==0 dwave 0,"se\aya2204.ogg"
+if %6==1 dwave 0,"se\mix0002.ogg"
+if %6==2 dwave 0,"se\sis2311.ogg"
+
+wait 1000
+bg "image\logo_n.png",10
+
+wait 1000
+bg "image\CAUTION_02.png",10
+
+wait 500
+*title
+ADV_setting
+
+bg black,10
+
+bg "image\titlebase.png",10
+bgm "bgm\Lop.ogg"
+
+;タイトルコール
+rnd %7,5	;0~4   e\s
+if %7==0 dwave 0,"se\aya2206.ogg"
+if %7==1 dwave 0,"se\aya2207.ogg"
+if %7==2 dwave 0,"se\mix0003.ogg"
+if %7==3 dwave 0,"se\sis2313.ogg"
+if %7==4 dwave 0,"se\sis2314.ogg"
+
+lsp 30,":s;#440066#FFCCFFＮＥＷ　ＧＡＭＥ",  300,330
+lsp 31,":s;#440066#FFCCFFＤＡＴＡ　ＬＯＡＤ",287,375
+lsp 32,":s;#440066#FFCCFFＣＯＮＦＩＧ",      325,420
+lsp 33,":s;#440066#FFCCFFＧＡＬＬＥＲＹ",    312,465
+lsp 34,":s;#440066#FFCCFFＧＡＭＥ　ＥＮＤ",  300,510
+
+lsph 40,":s;#FFFFFFＮＥＷ　ＧＡＭＥ",  300,330
+lsph 41,":s;#FFFFFFＤＡＴＡ　ＬＯＡＤ",287,375
+lsph 42,":s;#FFFFFFＣＯＮＦＩＧ",      325,420
+lsph 43,":s;#FFFFFFＧＡＬＬＥＲＹ",    312,465
+lsph 44,":s;#FFFFFFＧＡＭＥ　ＥＮＤ",  300,510
+
+
+print 1
+
+*title_loop
+	bclear
+	spbtn 30,30
+	spbtn 31,31
+	spbtn 32,32
+	spbtn 33,33
+	spbtn 34,34
+	
+	btnwait %50
+	if %50!=-1 if %50!=0 dwave 1,"se\sys_title.ogg"
+	
+	if %50==30 vsp 30,0:vsp 40,1:print 11:wait 500:ADV_setting:goto *SCR_start
+	if %50==31 vsp 31,0:vsp 41,1:print 11:wait 500:csp -1:bg black,10:bg "image\load_base.png",10:systemcall load:bg black,10:goto *title
+	if %50==32 vsp 32,0:vsp 42,1:print 11:wait 500:csp -1:bg black,10:bg "image\config_base.png",10:goto *volmenu_GUI
+	if %50==33 vsp 33,0:vsp 43,1:print 11:wait 500:csp -1:bg black,10:goto *GALLERY_MODE
+	if %50==34 vsp 34,0:vsp 44,1:print 11:wait 500:csp -1:bg black,10:end
+	
+goto *title_loop
+;----------------------------------------
+*volmenu_GUI
+	;https://gist.github.com/Prince-of-sea/325b8ae6912ecf23316a71c3d008480c
+	;文字/数字/スプライト/ボタン
+	;全部130~149までを使ってます - 競合に注意
+	;[注]上記URLのものとは完全に一致してません 若干改変入ってます
+	
+	
+	;バー文字列定義
+	mov $130,":s;#FFFFFF#666666○――――――――――"
+	mov $131,":s;#FFFFFF#666666―○―――――――――"
+	mov $132,":s;#FFFFFF#666666――○――――――――"
+	mov $133,":s;#FFFFFF#666666―――○―――――――"
+	mov $134,":s;#FFFFFF#666666――――○――――――"
+	mov $135,":s;#FFFFFF#666666―――――○―――――"
+	mov $136,":s;#FFFFFF#666666――――――○――――"
+	mov $137,":s;#FFFFFF#666666―――――――○―――"
+	mov $138,":s;#FFFFFF#666666――――――――○――"
+	mov $139,":s;#FFFFFF#666666―――――――――○―"
+	mov $140,":s;#FFFFFF#666666――――――――――○"
+	
+*volmenu_loop
+	;取得
+	getbgmvol   %130
+	getsevol    %131
+	getvoicevol %132
+	
+	;文字列変換
+	itoa2 $141,%130
+	itoa2 $142,%131
+	itoa2 $143,%132
+	
+	;バー代入
+	if %130==  0 mov $146,$130
+	if %130== 10 mov $146,$131
+	if %130== 20 mov $146,$132
+	if %130== 30 mov $146,$133
+	if %130== 40 mov $146,$134
+	if %130== 50 mov $146,$135
+	if %130== 60 mov $146,$136
+	if %130== 70 mov $146,$137
+	if %130== 80 mov $146,$138
+	if %130== 90 mov $146,$139
+	if %130==100 mov $146,$140
+	if %131==  0 mov $147,$130
+	if %131== 10 mov $147,$131
+	if %131== 20 mov $147,$132
+	if %131== 30 mov $147,$133
+	if %131== 40 mov $147,$134
+	if %131== 50 mov $147,$135
+	if %131== 60 mov $147,$136
+	if %131== 70 mov $147,$137
+	if %131== 80 mov $147,$138
+	if %131== 90 mov $147,$139
+	if %131==100 mov $147,$140
+	if %132==  0 mov $148,$130
+	if %132== 10 mov $148,$131
+	if %132== 20 mov $148,$132
+	if %132== 30 mov $148,$133
+	if %132== 40 mov $148,$134
+	if %132== 50 mov $148,$135
+	if %132== 60 mov $148,$136
+	if %132== 70 mov $148,$137
+	if %132== 80 mov $148,$138
+	if %132== 90 mov $148,$139
+	if %132==100 mov $148,$140
+	
+	;画面作成
+	lsp 130,":s;#FFFFFF［Ｃｏｎｆｉｇ］",  50, 50
+	lsp 131,":s;#FFFFFF#666666テスト再生",250,450
+	lsp 132,":s;#FFFFFF#666666リセット",  400,450
+	lsp 133,":s;#FFFFFF#666666戻る",      550,450
+	
+	lsp 135,":s;#FFFFFFＢＧＭ",           50,150
+	lsp 136,":s;#FFFFFF#666666＜",       200,150
+	lsp 137,$146,                        250,150
+	lsp 138,":s;#FFFFFF#666666＞",       550,150
+	lsp 139,":s;#FFFFFF#666666"+$141,    600,150
+	
+	lsp 140,":s;#FFFFFFＳＥ",             50,250
+	lsp 141,":s;#FFFFFF#666666＜",       200,250
+	lsp 142,$147,                        250,250
+	lsp 143,":s;#FFFFFF#666666＞",       550,250
+	lsp 144,":s;#FFFFFF#666666"+$142,    600,250
+	
+	lsp 145,":s;#FFFFFFＶＯＩＣＥ",       50,350
+	lsp 146,":s;#FFFFFF#666666＜",       200,350
+	lsp 147,$148,                        250,350
+	lsp 148,":s;#FFFFFF#666666＞",       550,350
+	lsp 149,":s;#FFFFFF#666666"+$143,    600,350
+	
+	print 1
+	
+	;ボタン定義
+	bclear
+	spbtn 131,131
+	spbtn 132,132
+	spbtn 133,133
+	spbtn 136,136
+	spbtn 138,138
+	spbtn 141,141
+	spbtn 143,143
+	spbtn 146,146
+	spbtn 148,148
+	
+	;入力待ち
+	btnwait %140
+	if %140!=-1 if %140!=0 dwave 1,"se\sys_title.ogg"
+	
+	if %140==131 gosub *voice_test
+	if %140==132 dwavestop 0:bgmvol 100:sevol 100:voicevol 100
+	if %140==133 csp -1:dwavestop -1:bg black,10:goto *title
+	if %140==136 if %130!=  0 sub %130,10:bgmvol %130
+	if %140==138 if %130!=100 add %130,10:bgmvol %130
+	if %140==141 if %131!=  0 sub %131,10:sevol %131
+	if %140==143 if %131!=100 add %131,10:sevol %131
+	if %140==146 if %132!=  0 sub %132,10:voicevol %132
+	if %140==148 if %132!=100 add %132,10:voicevol %132
+	
+goto *volmenu_loop
+;----------------------------------------
+*voice_test
+	rnd %150,2
+	if %150==0 dwave 0,"voice\aya_voice.ogg"
+	if %150==1 dwave 0,"voice\sis_voice.ogg"
+return
+;----------------------------------------
+*GALLERY_MODE
+bg "image\view_cg.png",10
+click
+
+bg black,10
+mpegplay "video\op.mpg",1
+
+bg black,10
+goto *title
+;----------------------------------------
