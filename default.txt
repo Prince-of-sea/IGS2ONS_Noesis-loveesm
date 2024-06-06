@@ -153,6 +153,35 @@ return
 ;	16 立ち絵右
 ;	17 立ち絵左
 ;----------------------------------------
+*staffroll
+	
+	;%150 再生時間
+	;%151 ロール画像x - 使わん
+	;%152 ロール画像y
+	;%153 gettimer
+	;%154 下記参照
+	
+	;ed曲の再生時間
+	;mov %150,110078;今回は前段階で指定
+	
+	lsp 13,"image\credit_join.png",220,0
+	getspsize 13,%151,%152
+	sub %152,600
+	
+	resettimer
+	
+	*staffroll_loop
+		gettimer %153
+		
+		;(経過時間/再生時間)*ロール画像y
+		mov %154,%153*%152/%150
+		
+		if %153<%150 amsp 13,220,0-%154:print 1
+		if %153>%150 bgmstop:amsp 13,220,0-%152:print 1:goto *staffroll_end
+	goto *staffroll_loop
+	*staffroll_end
+return
+;----------------------------------------
 *start
 bg black,1
 
@@ -343,9 +372,9 @@ goto *title_loop
 goto *volmenu_loop
 ;----------------------------------------
 *voice_test
-	rnd %150,2
-	if %150==0 dwave 0,"voice\aya_voice.ogg"
-	if %150==1 dwave 0,"voice\sis_voice.ogg"
+	rnd %160,2
+	if %160==0 dwave 0,"voice\aya_voice.ogg"
+	if %160==1 dwave 0,"voice\sis_voice.ogg"
 return
 ;----------------------------------------
 *GALLERY_MODE

@@ -13,8 +13,8 @@
  - セーブ/ロード画面は超簡略化
  - CG/音楽/回想モードは未実装<br>
    (GALLERYはとりあえずOPを流せるようになってます)
- - エンディング時のスタッフロール未実装<br>
-   (一枚絵が表示されEDテーマが流れるだけの状態)
+ - ~~エンディング時のスタッフロール未実装~~<br>
+   ~~(一枚絵が表示されEDテーマが流れるだけの状態)~~ v1.1.0にて実装
 
 ## 使い方
  1. 適当な作業フォルダを作成
@@ -22,9 +22,52 @@
      設定は以下の通り↓<br>
      ![](image1.png)
  3. [IG_tools](https://github.com/lennylxx/IG_tools/releases/tag/v1.0.0)をDLし展開、**"igscriptD.exe"のみ**を作業フォルダへ移動<br>
- 4. 展開先のディレクトリで[このコンバータ](https://github.com/Prince-of-sea/IGS2ONS_Noesis-loveesm/releases/latest)をDL/起動させ変換(最低でも数分程度はかかります)<br>
+ 4. 展開先のディレクトリで[このコンバータ](https://github.com/Prince-of-sea/IGS2ONS_Noesis-loveesm/releases/latest)をDL/起動させ変換(数秒で終わります)<br>
     変換前の時点で以下のような構成になっていればOKです↓<br>
-    ![](image2.png)<br>
+    ```
+    C:.
+    │  default.txt
+    │  IGS2ONS_Noesis-loveesm.exe
+    │  igscriptD.exe
+    │  
+    ├─bgimage
+    │      bg01.png
+    │      (～略)
+    │      gameover.png
+    │      
+    ├─bgm
+    │      L01.ogg
+    │      (～略)
+    │      Lop_s.ogg
+    │      
+    ├─fgimage
+    │      aya0001.png
+    │      (～略)
+    │      yos0019.png
+    │      
+    ├─script
+    │      0010.s
+    │      (～略)
+    │      start.s
+    │      
+    ├─se
+    │      aya2204.ogg
+    │      (～略)
+    │      sys_title.ogg
+    │      
+    ├─system
+    │      asExit.png
+    │      (～略)
+    │      win_menu.png
+    │      
+    ├─video
+    │      op.mpg
+    │      
+    └─voice
+            aya0001.ogg
+            (～略)
+            sis_voice.ogg
+    ```
  5. ウィンドウが消え、0.txtができれば完成<br>
     exe等の不要データを削除し、変換済みファイルと共に利用ハードへ転送
 
@@ -35,7 +78,7 @@
 
 ## その他
  - 本作の変換を追加でサポートする[PSP向け自動変換ツール作ってます](https://github.com/Prince-of-sea/ONScripter_Multi_Converter)<br>
-   もしPSPで遊ぶ場合はぜひご利用ください(v1.2.9以上推奨)
+   もしPSPで遊ぶ場合はぜひご利用ください(v1.4.8以上推奨)
  - ゲームをプレイする際に利用する端末やONScripterのバージョンによっては、<br>
    OPムービーの音が途切れたり、スロー再生になったりする場合があります<br>
    適宜FFmpeg等で調整してください<br>
